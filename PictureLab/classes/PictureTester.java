@@ -149,6 +149,13 @@ public class PictureTester
         
         finalpic.explore();
     }
+    public static void testSepia()
+    {
+        Picture pic = new Picture("picopop_and_pocky.jpg");
+        pic.explore();
+        pic.sepia();
+        pic.explore();
+    }
     /** Main method for testing.  Every class can have a main
      * method in Java */
     public static void main(String[] args)
