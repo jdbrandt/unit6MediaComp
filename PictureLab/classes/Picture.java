@@ -349,58 +349,94 @@ public class Picture extends SimplePicture
             }
         }
     }
-    
+
     public void grayscale()
     {
-        
+
         Pixel[][] pixels = this.getPixels2D();
-        
+
         for (Pixel[] arr : pixels)
         {
             for (Pixel pixel : arr)
             {
                 int avg = (int) ((pixel.getBlue()+pixel.getGreen()+pixel.getRed())/3.0);
-                
+
                 pixel.setBlue(avg);
                 pixel.setGreen(avg);
                 pixel.setRed(avg);
             }
         }
     }
-    
+
     public void collage()
     {
         ;
     }
+
     /**
      * merges 2 images side by side
      * @pre dimensions of params are equal
      * 
      */
-    public Picture merge2(Picture pic1, Picture pic2)
+    public void merge2(Picture pic1, Picture pic2)
     {
         Pixel[][] pixels1 = pic1.getPixels2D();
         Pixel[][] pixels2 = pic2.getPixels2D();
-        
+
         int height = pixels1.length;
         int width = pixels1[0].length;
+
+        Pixel[][] finalpixels = this.getPixels2D();
         
-        //Make a picture twice as wide
-        Picture finalpic = new Picture(height, width*2);
-        Pixel[][] finalpixels = finalpic.getPixels2D();
+        /**
+         * Sets the final pic so that it should look like
+         *       __________
+         *      |PIC1  PIC2|
+         *       __________ 
+         */
         for (int row = 0; row < height; row++)
         {
             for (int col = 0; col < width; col++)
             {
-                finalpixels[row][col] = pixels1[row][col];
-                finalpixels[row][width+col] = pixels2[row][col];
+                finalpixels[row][col].setColor(pixels1[row][col].getColor());
+                finalpixels[row][width+col].setColor(pixels2[row][col].getColor());
             }
         }
-     
-       
-        
     }
     
+    public void merge4(Picture pic1, Picture pic2, Picture pic3, Picture pic4)
+    {
+        Pixel[][] pixels1 = pic1.getPixels2D();
+        Pixel[][] pixels2 = pic2.getPixels2D();
+        Pixel[][] pixels3 = pic3.getPixels2D();
+        Pixel[][] pixels4 = pic4.getPixels2D();
+        
+        int height = pixels1.length;
+        int width = pixels1[0].length;
+        
+        Pixel[][] finalpixels = this.getPixels2D();
+        
+        /**
+         * Sets the final pic so that it should look like
+         *    
+         *    __________
+         *   |PIC1  PIC2|
+         *   |PIC3  PIC4|
+         *    __________
+         */
+        
+        for(int row = 0; row < height; row++)
+        {
+            for(int col = 0; col < width; col++)
+            {
+                finalpixels[row][col].setColor(pixels1[row][col].getColor());
+                finalpixels[row][width+col].setColor(pixels2[row][col].getColor());
+                finalpixels[row+height][col].setColor(pixels3[row][col].getColor());
+                finalpixels[row+height][width+col].setColor(pixels4[row][col].getColor());
+            }
+        }
+    }
+
     /* Main method for testing - each class in Java can have a main 
      * method 
      */

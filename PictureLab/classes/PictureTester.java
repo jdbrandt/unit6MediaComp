@@ -120,8 +120,35 @@ public class PictureTester
         pic.explore();
         pic.grayscale();
         pic.explore();
+        
+     
     }
     
+    public static void testMerge2()
+    {
+        Picture pic1 = new Picture("little_planets.jpg");
+        Picture pic2 = new Picture(pic1);
+        Picture finalpic = new Picture(pic1.getPixels2D().length, pic1.getPixels2D()[0].length*2);
+        finalpic.merge2(pic1, pic2);
+        
+        pic1.explore();
+        pic2.explore();
+
+        finalpic.explore();
+    }
+    
+    public static void testMerge4()
+    {
+        Picture pic1 = new Picture("picopop_and_pocky.jpg");
+        Picture pic2 = new Picture(pic1);
+        Picture pic3 = new Picture(pic2);
+        Picture pic4 = new Picture(pic3);
+        
+        Picture finalpic = new Picture(pic1.getPixels2D().length*2, pic1.getPixels2D()[0].length*2);
+        finalpic.merge4(pic1, pic2, pic3, pic4);
+        
+        finalpic.explore();
+    }
     /** Main method for testing.  Every class can have a main
      * method in Java */
     public static void main(String[] args)
