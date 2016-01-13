@@ -98,6 +98,19 @@ public class Picture extends SimplePicture
         }
     }
 
+    public void keepOnlyBlue()
+    {
+        Pixel[][] pixels = this.getPixels2D();
+        for (Pixel[] arr : pixels)
+        {
+            for (Pixel pixel : arr)
+            {
+                pixel.setRed(0);
+                pixel.setGreen(0);
+            }
+        }
+    }
+
     /** Method that mirrors the picture around a 
      * vertical mirror in the center of the picture
      * from left to right */
@@ -117,7 +130,7 @@ public class Picture extends SimplePicture
             }
         } 
     }
-    
+
     /** Method that mirrors the picture around a 
      * vertical mirror in the center of the picture
      * from right to left */
@@ -137,7 +150,7 @@ public class Picture extends SimplePicture
             }
         } 
     }
-    
+
     /** Method that mirrors the picture around a 
      * horizontal mirror in the center of the picture
      * from left to right */
@@ -157,7 +170,7 @@ public class Picture extends SimplePicture
             }
         } 
     }
-    
+
     public void mirrorHorizontalBottoTop()
     {
         Pixel[][] pixels = this.getPixels2D();
@@ -174,7 +187,7 @@ public class Picture extends SimplePicture
             }
         } 
     }
-        
+
     /** Mirror just part of a picture of a temple */
     public void mirrorTemple()
     {
@@ -183,7 +196,7 @@ public class Picture extends SimplePicture
         Pixel rightPixel = null;
         int count = 0;
         Pixel[][] pixels = this.getPixels2D();
-        
+
         // loop through the rows
         for (int row = 27; row < 97; row++)
         {
@@ -199,6 +212,7 @@ public class Picture extends SimplePicture
         }
         System.out.println(count);
     }
+
     public void mirrorArms()
     {
         int mirrorPoint = 177;
@@ -206,7 +220,7 @@ public class Picture extends SimplePicture
         Pixel rightPixel = null;
         int count = 0;
         Pixel[][] pixels = this.getPixels2D();
-        
+
         // loop through the rows
         for (int row = 158; row < mirrorPoint; row++)
         {
@@ -221,6 +235,7 @@ public class Picture extends SimplePicture
         }
         System.out.println(count);
     }
+
     public void mirrorGull()
     {
         int mirrorPoint = 361;
@@ -228,7 +243,7 @@ public class Picture extends SimplePicture
         Pixel rightPixel = null;
         int count = 0;
         Pixel[][] pixels = this.getPixels2D();
-        
+
         // loop through the rows
         for (int row = 236; row < 350; row++)
         {
@@ -242,7 +257,7 @@ public class Picture extends SimplePicture
                 rightPixel.setColor(leftPixel.getColor());
             }
         }
-        
+
     }
 
     /** copy from the passed fromPic to the
@@ -319,6 +334,73 @@ public class Picture extends SimplePicture
         }
     }
 
+    public void negate()
+    {
+
+        Pixel[][] pixels = this.getPixels2D();
+
+        for (Pixel[] arr : pixels)
+        {
+            for (Pixel pixel : arr)
+            {
+                pixel.setBlue(255-pixel.getBlue());
+                pixel.setGreen(255-pixel.getGreen());
+                pixel.setRed(255-pixel.getRed());
+            }
+        }
+    }
+    
+    public void grayscale()
+    {
+        
+        Pixel[][] pixels = this.getPixels2D();
+        
+        for (Pixel[] arr : pixels)
+        {
+            for (Pixel pixel : arr)
+            {
+                int avg = (int) ((pixel.getBlue()+pixel.getGreen()+pixel.getRed())/3.0);
+                
+                pixel.setBlue(avg);
+                pixel.setGreen(avg);
+                pixel.setRed(avg);
+            }
+        }
+    }
+    
+    public void collage()
+    {
+        ;
+    }
+    /**
+     * merges 2 images side by side
+     * @pre dimensions of params are equal
+     * 
+     */
+    public Picture merge2(Picture pic1, Picture pic2)
+    {
+        Pixel[][] pixels1 = pic1.getPixels2D();
+        Pixel[][] pixels2 = pic2.getPixels2D();
+        
+        int height = pixels1.length;
+        int width = pixels1[0].length;
+        
+        //Make a picture twice as wide
+        Picture finalpic = new Picture(height, width*2);
+        Pixel[][] finalpixels = finalpic.getPixels2D();
+        for (int row = 0; row < height; row++)
+        {
+            for (int col = 0; col < width; col++)
+            {
+                finalpixels[row][col] = pixels1[row][col];
+                finalpixels[row][width+col] = pixels2[row][col];
+            }
+        }
+     
+       
+        
+    }
+    
     /* Main method for testing - each class in Java can have a main 
      * method 
      */
