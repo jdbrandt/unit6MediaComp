@@ -12,6 +12,7 @@ import java.util.List; // resolves problem with java.awt.List and java.util.List
  * the Picture class.  
  * 
  * @author Barbara Ericson ericson@cc.gatech.edu
+ * @editor Jack Brandt as of Jan 15
  */
 public class Picture extends SimplePicture 
 {
@@ -436,6 +437,34 @@ public class Picture extends SimplePicture
             }
         }
     }
+    
+    public void sepia()
+    {
+        this.grayscale();
+        Pixel[][] pixels = this.getPixels2D();
+        
+        for (Pixel[] arr : pixels)
+        {
+            for (Pixel pixel : arr)
+            {
+                if (pixel.getRed() < 60)
+                {
+                    pixel.setRed((int)(pixel.getRed()*.9));
+                    pixel.setGreen((int)(pixel.getGreen()*.9));
+                    pixel.setBlue((int)(pixel.getBlue()*.9));
+                }
+                else if (pixel.getRed() < 190)
+                {
+                    pixel.setBlue((int)(pixel.getBlue()*.8));
+                }
+                else
+                {
+                    pixel.setBlue((int)(pixel.getBlue()*.9));
+                }
+            }
+        }
+    }
+                    
 
     /* Main method for testing - each class in Java can have a main 
      * method 
