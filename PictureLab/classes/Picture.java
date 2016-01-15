@@ -465,6 +465,13 @@ public class Picture extends SimplePicture
         }
     }
                     
+    public Picture scaleByHalf()
+    {
+        klasdklf;
+        aklsdfkl
+        
+        
+    }
 
     /* Main method for testing - each class in Java can have a main 
      * method 
