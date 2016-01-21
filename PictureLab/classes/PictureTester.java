@@ -36,7 +36,7 @@ public class PictureTester
 
     public static void testMirrorHorizontal()
     {
-        Picture pic = new Picture("cheshire_cat.jpg");
+        Picture pic = new Picture("picopop_and_pocky.jpg");
         pic.explore();
         pic.mirrorHorizontal();
         pic.explore();
@@ -68,9 +68,11 @@ public class PictureTester
     /** Method to test the collage method */
     public static void testCollage()
     {
+        /*
         Picture canvas = new Picture("640x480.jpg");
         canvas.createCollage();
         canvas.explore();
+        */
     }
    
     /** Method to test edgeDetection */
@@ -154,6 +156,19 @@ public class PictureTester
         Picture pic = new Picture("picopop_and_pocky.jpg");
         pic.explore();
         pic.sepia();
+        pic.explore();
+    }
+    
+    public static void testScaleByHalf()
+    {
+        Picture pic = new Picture("cheshire_cat.jpg");
+        pic.explore();
+        pic.scaleByHalf().explore();
+    }
+    
+    public static void makeCollage()
+    {
+        Picture pic = Picture.makeCollage();
         pic.explore();
     }
     /** Main method for testing.  Every class can have a main

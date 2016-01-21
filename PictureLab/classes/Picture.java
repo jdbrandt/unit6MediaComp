@@ -292,23 +292,7 @@ public class Picture extends SimplePicture
         }   
     }
 
-    /** Method to create a collage of several pictures */
-    public void createCollage()
-    {
-        Picture flower1 = new Picture("flower1.jpg");
-        Picture flower2 = new Picture("flower2.jpg");
-        this.copy(flower1,0,0);
-        this.copy(flower2,100,0);
-        this.copy(flower1,200,0);
-        Picture flowerNoBlue = new Picture(flower2);
-        flowerNoBlue.zeroBlue();
-        this.copy(flowerNoBlue,300,0);
-        this.copy(flower1,400,0);
-        this.copy(flower2,500,0);
-        this.mirrorVertical();
-        this.write("collage.jpg");
-    }
-
+    
     /** Method to show large changes in color 
      * @param edgeDist the distance for finding edges
      */
@@ -369,9 +353,139 @@ public class Picture extends SimplePicture
         }
     }
 
-    public void collage()
+    public static Picture makeCollage()
     {
-        ;
+        Picture pic1 = new Picture("picopop_and_pocky.jpg");
+        Picture pic2 = new Picture("picopop_and_pocky.jpg");
+        Picture pic3 = new Picture("picopop_and_pocky.jpg");
+        Picture pic4 = new Picture("picopop_and_pocky.jpg");
+
+        pic2 = pic2.pic2();
+        pic3.pic3();
+        pic4.pic4();
+
+        Picture penultimate_pic = new Picture(pic1.getHeight()*2, pic1.getWidth()*2);
+        penultimate_pic.merge4(pic1, pic2, pic3, pic4);
+        return penultimate_pic;
+
+    }
+
+    public Picture pic2()
+    {
+        Picture pic21 = this.scaleByHalf();
+        Picture pic22 = new Picture(pic21);
+        Picture pic23 = new Picture(pic22);
+        Picture pic24 = new Picture(pic23);
+
+        pic21.explore();
+
+        Picture final_pic = new Picture(this.getPixels2D().length, this.getPixels2D()[0].length);
+        final_pic.merge4(pic21, pic22, pic23, pic24);
+        final_pic.grayscale();
+        return final_pic;
+    }
+
+    public void pic3()
+    {
+        this.mirrorVertical();
+        this.negate();
+    }
+
+    public void pic4()
+    {
+        this.mirrorHorizontal();
+        this.posterizeByN(3);
+        this.brightenTrueBlack();
+    }
+    
+
+
+    /**
+     * Don't know it this will work, but tries to brighten the image by increasing RGB by constant
+     */
+    public void brighten()
+    {
+        final double FACTOR = 1.5;
+
+        Pixel[][] pixels = this.getPixels2D();
+
+        for (Pixel[] arr : pixels)
+        {
+            for (Pixel pixel : arr)
+            {
+                pixel.setRed((int)(pixel.getRed()*FACTOR));
+                pixel.setGreen((int)(pixel.getGreen()*FACTOR));
+                pixel.setBlue((int)(pixel.getBlue()*FACTOR));
+            }
+        }
+
+    }
+
+    /**
+     * Similar to brighten, just maintains "true black", hopefully avoiding washed-out style
+     */
+    public void brightenTrueBlack()
+    {
+        final double FACTOR = 1.5;
+
+        Pixel[][] pixels = this.getPixels2D();
+
+        for (Pixel[] arr : pixels)
+        {
+            for (Pixel pixel : arr)
+            {
+                if (!(pixel.getRed()==pixel.getBlue() && pixel.getBlue()==pixel.getGreen() && pixel.getRed()<70))
+                {
+                    pixel.setRed((int)(pixel.getRed()*FACTOR));
+                    pixel.setGreen((int)(pixel.getGreen()*FACTOR));
+                    pixel.setBlue((int)(pixel.getBlue()*FACTOR));
+                }
+            }
+        }
+    } 
+
+    /*
+     * 
+     * Uses formula: f\left(x,y\right)=\ \operatorname{floor}\left(\frac{x}{\frac{256}{y}}\right)\cdot \frac{256}{y}+\frac{256}{2y}
+     * Above is in LaTeX, where x is pixel.getFoo() and y is the amount of divisions, in this case, four.
+     */
+    public void posterize()
+    {
+        Pixel[][] pixels = this.getPixels2D();
+
+        for (int row = 0; row < pixels.length; row++)
+        {
+            for (int col = 0; col < pixels[0].length; col++)
+            {
+                Pixel pixel = pixels[row][col];
+                pixel.setRed((pixel.getRed()/64)*64+32);
+                pixel.setGreen((pixel.getGreen()/64)*64+32);
+                pixel.setBlue((pixel.getBlue()/64)*64+32);
+                //Unnecessary iirc how object references work in Java, but just to be more obvious;
+                pixels[row][col] = pixel;
+            }
+        }
+    }
+
+    /**
+     * @param n how many divisions do I use for posterization
+     */
+    public void posterizeByN(int n)
+    {
+        Pixel[][] pixels = this.getPixels2D();
+
+        for (int row = 0; row < pixels.length; row++)
+        {
+            for (int col = 0; col < pixels[0].length; col++)
+            {
+                Pixel pixel = pixels[row][col];
+                pixel.setRed((pixel.getRed()/(256/n))*(256/n)+(256/(2*n)));
+                pixel.setGreen((pixel.getGreen()/(256/n))*(256/n)+(256/(2*n)));
+                pixel.setBlue((pixel.getBlue()/(256/n))*(256/n)+(256/(2*n)));
+                //see above
+                pixels[row][col] = pixel;
+            }
+        }
     }
 
     /**
@@ -388,7 +502,7 @@ public class Picture extends SimplePicture
         int width = pixels1[0].length;
 
         Pixel[][] finalpixels = this.getPixels2D();
-        
+
         /**
          * Sets the final pic so that it should look like
          *       __________
@@ -404,19 +518,19 @@ public class Picture extends SimplePicture
             }
         }
     }
-    
+
     public void merge4(Picture pic1, Picture pic2, Picture pic3, Picture pic4)
     {
         Pixel[][] pixels1 = pic1.getPixels2D();
         Pixel[][] pixels2 = pic2.getPixels2D();
         Pixel[][] pixels3 = pic3.getPixels2D();
         Pixel[][] pixels4 = pic4.getPixels2D();
-        
+
         int height = pixels1.length;
         int width = pixels1[0].length;
-        
+
         Pixel[][] finalpixels = this.getPixels2D();
-        
+
         /**
          * Sets the final pic so that it should look like
          *    
@@ -425,7 +539,7 @@ public class Picture extends SimplePicture
          *   |PIC3  PIC4|
          *    __________
          */
-        
+
         for(int row = 0; row < height; row++)
         {
             for(int col = 0; col < width; col++)
@@ -437,12 +551,12 @@ public class Picture extends SimplePicture
             }
         }
     }
-    
+
     public void sepia()
     {
         this.grayscale();
         Pixel[][] pixels = this.getPixels2D();
-        
+
         for (Pixel[] arr : pixels)
         {
             for (Pixel pixel : arr)
@@ -464,13 +578,42 @@ public class Picture extends SimplePicture
             }
         }
     }
-                    
+
     public Picture scaleByHalf()
     {
-        klasdklf;
-        aklsdfkl
-        
-        
+        Pixel[][] pixels_init = this.getPixels2D();
+
+        Picture final_pic = new Picture(pixels_init.length/2, pixels_init[0].length/2);
+
+        Pixel[][] foo = new Pixel[1][3];
+
+        Pixel[][] final_pixels = final_pic.getPixels2D();
+
+        for (int row = 0; row < final_pixels.length; row++)
+        {
+            for (int col = 0; col < final_pixels[0].length; col++)
+            {
+                final_pic.setBasicPixel(row, col, this.getPixel((int)(2*row), (int)(2*col)).getColor().getRGB());
+            }
+        }
+        return final_pic;
+
+    }
+
+    public Picture scaleByX(double x)
+    {
+        Pixel[][] pixels_init = this.getPixels2D();
+        Picture final_pic = new Picture((int)(pixels_init.length*x), (int)(pixels_init[0].length*x));
+        Pixel[][] final_pixels = final_pic.getPixels2D();
+
+        for (int row = 0; row < final_pixels.length; row++)
+        {
+            for (int col = 0; col < final_pixels[0].length; col++)
+            {
+                final_pic.setBasicPixel(row, col, this.getPixel((int)(1/x)*(row), (int)(1/x)*(col)).getColor().getRGB());
+            }
+        }
+        return final_pic;
     }
 
     /* Main method for testing - each class in Java can have a main 
