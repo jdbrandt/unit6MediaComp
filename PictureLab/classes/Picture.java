@@ -364,9 +364,9 @@ public class Picture extends SimplePicture
         pic3.pic3();
         pic4.pic4();
 
-        Picture penultimate_pic = new Picture(pic1.getHeight()*2, pic1.getWidth()*2);
-        penultimate_pic.merge4(pic1, pic2, pic3, pic4);
-        return penultimate_pic;
+        Picture final_pic = new Picture(pic1.getHeight()*2, pic1.getWidth()*2);
+        final_pic.merge4(pic1, pic2, pic3, pic4);
+        return final_pic;
 
     }
 

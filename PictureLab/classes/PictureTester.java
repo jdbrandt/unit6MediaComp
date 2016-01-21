@@ -170,6 +170,7 @@ public class PictureTester
     {
         Picture pic = Picture.makeCollage();
         pic.explore();
+        pic.write("MyCollage.jpg");
     }
     /** Main method for testing.  Every class can have a main
      * method in Java */
